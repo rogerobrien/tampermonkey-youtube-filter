@@ -115,4 +115,4 @@ To trigger an immediate update check:
 
 ## Issues or suggestions
 
-If something stops working or you have an idea for a new filter, [open an issue](https://github.com/rogerobrien/tampermmonkey-youtube-filter/issues) on this page and describe what you're seeing.
+If something stops working or you have an idea for a new filter, [open an issue](https://github.com/rogerobrien/tampermonkey-youtube-filter/issues) on this page and describe what you're seeing.
