@@ -26,7 +26,7 @@ Tampermonkey is a free browser extension that runs userscripts like this one.
 
 Once Tampermonkey is installed, click the link below to install the script:
 
-👉 **[Click here to install the script](https://raw.githubusercontent.com/YOURUSERNAME/YOURREPONAME/main/youtube-filter.user.js)**
+👉 **[Click here to install the script](https://raw.githubusercontent.com/rogerobrien/tampermonkey-youtube-filter/main/youtube-clean-feed.user.js)**
 
 > A Tampermonkey popup will appear asking you to confirm — click **Install**.
 
@@ -95,7 +95,7 @@ When an update is available, Tampermonkey will download it silently in the backg
 
 1. Clicking the Tampermonkey icon in your toolbar
 2. Clicking **Dashboard**
-3. Checking the version number next to the script name matches the latest version in the [Changelog](#changelog) above
+3. Checking the version number next to the script name matches the latest version in the [Changelog](#changelog)
 
 To trigger an immediate update check:
 1. Open the Tampermonkey **Dashboard**
