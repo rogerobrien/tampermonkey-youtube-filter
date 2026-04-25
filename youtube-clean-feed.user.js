@@ -181,7 +181,7 @@
         function injectIntoToolbar() {
             const micBtn = document.querySelector('#voice-search-button');
             if (micBtn && micBtn.parentNode) {
-                micBtn.parentNode.insertBefore(btn, micBtn);
+                micBtn.parentNode.insertBefore(btn, micBtn.nextSibling);
                 console.info('[YouTube Filter] Shorts toggle injected into toolbar');
                 return true;
             }
