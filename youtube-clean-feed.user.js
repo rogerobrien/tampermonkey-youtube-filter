@@ -168,8 +168,8 @@
             marginRight:  '8px',
         });
 
-        btn.addEventListener('mouseenter', () => btn.style.transform = 'scale(1.05)');
-        btn.addEventListener('mouseleave', () => btn.style.transform = 'scale(1)');
+        btn.addEventListener('mouseenter', () => { btn.style.transform = 'scale(1.05)'; });
+        btn.addEventListener('mouseleave', () => { btn.style.transform = 'scale(1)'; });
         btn.addEventListener('click', () => {
             shortsHidden = !shortsHidden;
             GM_setValue('shortsHidden', shortsHidden);
