@@ -7,9 +7,19 @@ A Tampermonkey userscript that cleans up YouTube by removing clutter you probabl
 - 🚫 Removes **Members Only** videos from your feed and sidebar
 - ▶️ Hides **Shorts** from the main feed, sidebar, and nav menu — with a toggle button to show them when you want
 - 👁️ Removes videos with **fewer than 1,000 views** from your feed and sidebar
-
 ---
+## Disclaimer
 
+This script is provided **as-is**, for personal use only, with no warranties or guarantees of any kind.
+
+- I am not responsible for any issues that arise from using this script, including but not limited to broken YouTube functionality, missed content, or unintended side effects.
+- I am not affiliated with YouTube, Google, or Tampermonkey in any way.
+- Tampermonkey is a third-party browser extension. I have no control over its behaviour, updates, or security. Use it at your own discretion.
+- YouTube frequently updates its layout and code. This script may stop working at any time as a result, and I cannot guarantee it will always be maintained or updated.
+- By installing and using this script you accept that you do so entirely at your own risk.
+
+If you're unsure about running userscripts in your browser, don't. This is intended for people who are comfortable with browser extensions and understand what userscripts are.
+---
 ## Installation
 
 ### Step 1 — Install Tampermonkey
@@ -22,17 +32,30 @@ Tampermonkey is a free browser extension that runs userscripts like this one.
 | Firefox | [Install Tampermonkey](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/) |
 | Edge | [Install Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd) |
 
-### Step 2 — Install the script
+### Step 2 — Enable Tampermonkey permissions
 
-Once Tampermonkey is installed, click the link below to install the script:
+After installing, you need to allow Tampermonkey to run scripts:
+
+1. Click the **Extensions** puzzle piece icon in your Chrome toolbar (top right)
+2. Find **Tampermonkey** in the list and click the **three dots** next to it
+3. Click **"Manage extension"**
+4. You'll see a setting that says **"Allow user scripts"** — click the toggle to enable it
+   > Chrome will warn you that the extension can run code not reviewed by Google. This is normal for all userscripts and safe as long as you trust where the script comes from.
+5. Also enable **"Allow access to file URLs"** on the same page
+
+### Step 3 — Install the script
+
+Click the link below to install the script:
 
 👉 **[Click here to install the script](https://raw.githubusercontent.com/rogerobrien/tampermonkey-youtube-filter/main/youtube-clean-feed.user.js)**
 
 > A Tampermonkey popup will appear asking you to confirm — click **Install**.
 
-### Step 3 — Go to YouTube
+### Step 4 — Go to YouTube
 
 The script runs automatically. You don't need to do anything else.
+
+> you will know the script is running when the extention has a small red indicator when you are on the site where the script is running.
 
 ---
 
@@ -84,6 +107,9 @@ Tampermonkey checks for updates automatically. To check manually:
 
 **The view count filter isn't working on some videos**
 > YouTube sometimes loads video metadata after the initial page render. The script watches for these late-loading elements, but very slow connections may occasionally miss some. Scrolling down and back up usually triggers a re-scan.
+
+**Tampermonkey script does not load after enstalation**
+>Ensure the allow options are enabled in the extention, if they are try enabling developer mode in the top right of the screen where you chane the user extentions
 
 ---
 
