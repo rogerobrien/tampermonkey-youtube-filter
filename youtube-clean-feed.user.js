@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube - Hide "Members Only", Shorts & Low View Videos
 // @namespace    https://github.com/roger-youtube-filter
-// @version      1.6.1
+// @version      1.7
 // @description  Removes Members Only videos, filters Shorts with a toggle, and hides videos under a configurable view threshold.
 // @author       Roger
 // @match        https://www.youtube.com/*
