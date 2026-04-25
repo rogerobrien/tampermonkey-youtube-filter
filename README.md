@@ -87,6 +87,20 @@ Tampermonkey checks for updates automatically. To check manually:
 
 ---
 
+## Auto-updates
+
+The script updates itself automatically as long as you installed it via the install link above. You don't need to do anything.
+
+When an update is available, Tampermonkey will download it silently in the background. You can confirm the script is up to date by:
+
+1. Clicking the Tampermonkey icon in your toolbar
+2. Clicking **Dashboard**
+3. Checking the version number next to the script name matches the latest version in the [Changelog](#changelog) above
+
+To trigger an immediate update check:
+1. Open the Tampermonkey **Dashboard**
+2. Click the **"Check for updates"** icon (the circular arrow) next to the script
+
 ## Changelog
 
 | Version | Changes |
