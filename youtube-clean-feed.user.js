@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube - Hide "Members Only", Shorts & Low View Videos
 // @namespace    https://github.com/roger-youtube-filter
-// @version      1.8
+// @version      1.9
 // @description  Removes Members Only videos, filters Shorts with a toggle, and hides videos under a configurable view threshold.
 // @author       Roger
 // @match        https://www.youtube.com/*
@@ -131,82 +131,117 @@
         });
     }
 
-    // ── Toggle Button UI ────────────────────────────────────────────────────
-    function updateButtonLabel(btn) {
-        if (shortsHidden) {
-            btn.textContent = '▶  Show Shorts';
-            btn.style.background = '#212121';
-            btn.style.color = '#ffffff';
-        } else {
-            btn.textContent = '✕  Hide Shorts';
-            btn.style.background = '#ff0000';
-            btn.style.color = '#ffffff';
+// ── Toggle Button UI ────────────────────────────────────────────────────
+function updateButtonLabel(btn, track, thumb) {
+    if (shortsHidden) {
+        track.style.background = '#606060';
+        thumb.style.transform = 'translateX(0px)';
+        btn.title = 'Shorts are hidden — click to show';
+    } else {
+        track.style.background = '#2ba640';
+        thumb.style.transform = 'translateX(20px)';
+        btn.title = 'Shorts are visible — click to hide';
+    }
+}
+
+function createToggleButton() {
+    if (document.getElementById('yt-shorts-toggle-btn')) return;
+
+    // Outer wrapper
+    const wrapper = document.createElement('div');
+    wrapper.id = 'yt-shorts-toggle-btn';
+    Object.assign(wrapper.style, {
+        display:     'flex',
+        alignItems:  'center',
+        gap:         '8px',
+        marginLeft:  '12px',
+        marginRight: '4px',
+        cursor:      'pointer',
+        userSelect:  'none',
+        flexShrink:  '0',
+    });
+
+    // Label
+    const label = document.createElement('span');
+    label.textContent = 'Shorts';
+    Object.assign(label.style, {
+        fontFamily: 'Roboto, Arial, sans-serif',
+        fontSize:   '13px',
+        fontWeight: '500',
+        color:      'var(--yt-spec-text-primary, #fff)',
+    });
+
+    // Toggle track
+    const track = document.createElement('div');
+    Object.assign(track.style, {
+        width:        '44px',
+        height:       '24px',
+        borderRadius: '12px',
+        background:   shortsHidden ? '#606060' : '#2ba640',
+        position:     'relative',
+        transition:   'background 0.2s',
+        flexShrink:   '0',
+    });
+
+    // Toggle thumb
+    const thumb = document.createElement('div');
+    Object.assign(thumb.style, {
+        width:        '18px',
+        height:       '18px',
+        borderRadius: '50%',
+        background:   '#ffffff',
+        position:     'absolute',
+        top:          '3px',
+        left:         '3px',
+        transition:   'transform 0.2s',
+        transform:    shortsHidden ? 'translateX(0px)' : 'translateX(20px)',
+    });
+
+    track.appendChild(thumb);
+    wrapper.appendChild(label);
+    wrapper.appendChild(track);
+
+    wrapper.addEventListener('click', () => {
+        shortsHidden = !shortsHidden;
+        GM_setValue('shortsHidden', shortsHidden);
+        updateButtonLabel(wrapper, track, thumb);
+        applyShortVisibility();
+        console.info('[YouTube Filter] Shorts toggled:', shortsHidden ? 'hidden' : 'visible');
+    });
+
+    wrapper.addEventListener('mouseenter', () => track.style.opacity = '0.85');
+    wrapper.addEventListener('mouseleave', () => track.style.opacity = '1');
+
+    function injectIntoToolbar() {
+        const micBtn = document.querySelector('#voice-search-button');
+        if (micBtn && micBtn.parentNode) {
+            micBtn.parentNode.insertBefore(wrapper, micBtn.nextSibling);
+            console.info('[YouTube Filter] Shorts toggle injected into toolbar');
+            return true;
         }
+        return false;
     }
 
-    function createToggleButton() {
-        if (document.getElementById('yt-shorts-toggle-btn')) return;
-
-        const btn = document.createElement('button');
-        btn.id = 'yt-shorts-toggle-btn';
-        updateButtonLabel(btn);
-
-        Object.assign(btn.style, {
-            display:      'flex',
-            alignItems:   'center',
-            padding:      '0 12px',
-            height:       '40px',
-            borderRadius: '20px',
-            border:       'none',
-            cursor:       'pointer',
-            fontFamily:   'Roboto, Arial, sans-serif',
-            fontSize:     '13px',
-            fontWeight:   '500',
-            boxShadow:    '0 1px 4px rgba(0,0,0,0.3)',
-            transition:   'background 0.2s, transform 0.1s',
-            flexShrink:   '0',
-            marginRight:  '8px',
-        });
-
-        btn.addEventListener('mouseenter', () => { btn.style.transform = 'scale(1.05)'; });
-        btn.addEventListener('mouseleave', () => { btn.style.transform = 'scale(1)'; });
-        btn.addEventListener('click', () => {
-            shortsHidden = !shortsHidden;
-            GM_setValue('shortsHidden', shortsHidden);
-            updateButtonLabel(btn);
-            applyShortVisibility();
-            console.info('[YouTube Filter] Shorts toggled:', shortsHidden ? 'hidden' : 'visible');
-        });
-
-        function injectIntoToolbar() {
-            const micBtn = document.querySelector('#voice-search-button');
-            if (micBtn && micBtn.parentNode) {
-                micBtn.parentNode.insertBefore(btn, micBtn.nextSibling);
-                console.info('[YouTube Filter] Shorts toggle injected into toolbar');
-                return true;
+    if (!injectIntoToolbar()) {
+        const pollInterval = setInterval(() => {
+            if (injectIntoToolbar()) clearInterval(pollInterval);
+        }, 500);
+        setTimeout(() => {
+            clearInterval(pollInterval);
+            if (!document.getElementById('yt-shorts-toggle-btn')) {
+                Object.assign(wrapper.style, {
+                    position: 'fixed',
+                    bottom:   '24px',
+                    right:    '24px',
+                    zIndex:   '9999',
+                });
+                document.body.appendChild(wrapper);
+                console.warn('[YouTube Filter] Toolbar injection failed, using fixed fallback');
             }
-            return false;
-        }
-
-        if (!injectIntoToolbar()) {
-            const pollInterval = setInterval(() => {
-                if (injectIntoToolbar()) clearInterval(pollInterval);
-            }, 500);
-            setTimeout(() => {
-                clearInterval(pollInterval);
-                if (!document.getElementById('yt-shorts-toggle-btn')) {
-                    Object.assign(btn.style, {
-                        position: 'fixed',
-                        bottom:   '24px',
-                        right:    '24px',
-                        zIndex:   '9999',
-                    });
-                    document.body.appendChild(btn);
-                    console.warn('[YouTube Filter] Toolbar injection failed, using fixed fallback');
-                }
-            }, 10000);
-        }
+        }, 10000);
     }
+}  
+
 
     // ── Run all filters ─────────────────────────────────────────────────────
     function runAllFilters() {
