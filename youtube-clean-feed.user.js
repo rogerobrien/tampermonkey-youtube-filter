@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube - Hide "Members Only", Shorts & Low View Videos
 // @namespace    https://github.com/rogerobrien/tampermonkey-youtube-filter
-// @version      1.9.1
+// @version      1.9.2
 // @description  Removes Members Only videos, filters Shorts with a toggle, and hides videos under a configurable view threshold.
 // @author       Roger
 // @match        https://www.youtube.com/*
@@ -81,23 +81,25 @@
                 }
             }
         });
-
+        //
         // Newer lockup layout
-        document.querySelectorAll('yt-lockup-view-model').forEach(container => {
-            if (container.dataset.removedByViewFilter) return;
-            const metaEls = container.querySelectorAll(
-                '.yt-content-metadata-view-model-wiz__metadata-text, .ytContentMetadataViewModelMetadataText'
+        document.querySelectorAll(
+            '.yt-content-metadata-view-model-wiz__metadata-text, .ytContentMetadataViewModelMetadataText'
+        ).forEach(metaEl => {
+            const text = metaEl.textContent.trim();
+            if (!text.toLowerCase().includes('view') || !isBelowThreshold(text)) return;
+        
+            // Climb up to the lockup container
+            const container = metaEl.closest(
+                'yt-lockup-view-model, ytd-rich-item-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-video-renderer'
             );
-            for (const metaEl of metaEls) {
-                const text = metaEl.textContent.trim();
-                if (text.toLowerCase().includes('view') && isBelowThreshold(text)) {
-                    container.dataset.removedByViewFilter = '1';
-                    container.remove();
-                    console.debug('[YouTube Filter] Removed low-view lockup:', text, container);
-                    break;
-                }
+            if (container && !container.dataset.removedByViewFilter) {
+                container.dataset.removedByViewFilter = '1';
+                container.remove();
+                console.debug('[YouTube Filter] Removed low-view video:', text, container);
             }
         });
+        
     }
 
     // ── Shorts removal ──────────────────────────────────────────────────────
